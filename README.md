@@ -9,7 +9,9 @@ https://microphone-test.com/sound-decibel-meter/
 
 ## 📸 Screenshot
 
-screenshots/decibelmeter.png
+## 📸 Sound Decibel Meter Preview
+
+![Sound Decibel Meter](screenshots/decibelmeter.png)
 
 *Real-time sound monitoring with a sound level meter, noise reference guide, and measurement controls.*
 
