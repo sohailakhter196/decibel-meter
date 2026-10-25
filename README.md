@@ -77,7 +77,7 @@ If you find this project useful, consider giving the repository a ⭐ on GitHub.
 
 ## Project Information
 
-- **Project:**Decibel Meter
+- **Project:** Decibel Meter
 - **Category:** Testing tool 
 - **Platform:** Web browser
 - **Installation:** Not required
