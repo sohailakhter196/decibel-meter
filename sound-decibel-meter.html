@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sound Decibel Meter</title>
+
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+<style>
+* { box-sizing: border-box; }
+
+
+body {
+  margin: 0;
+  padding: 20px;
+  background: #f3f4f6;
+  color: #171717;
+  font-family: Inter, Arial, sans-serif;
+}
+
+
+.meter-shell {
+  width: 800px;
+  max-width: 100%;
+  min-height: 600px;
+  margin: 0 auto;
+  background: #fff;
+  border: 1px solid #e9e9ec;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 20px 55px rgba(0,0,0,.12);
+}
+
+
+.header {
+  padding: 22px 26px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+
+.header h1 {
+  font-size: 21px;
+  font-weight: 750;
+  margin: 0;
+}
+.fst-heading{
+     font-size: 21px;
+  font-weight: 750;
+}
+
+.subtitle {
+  color: #888;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+
+.status-pill {
+  font-size: 10px;
+  color: #1f1f1f;
+  border: 1px solid #eee;
+  border-radius: 30px;
+  padding: 8px 10px;
+  white-space: nowrap;
+}
+
+
+.content { padding: 22px; }
+
+
+.dashboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+
+.panel {
+  padding: 20px;
+  border: 1px solid #e9e9ec;
+  border-radius: 16px;
+  min-width: 0;
+}
+
+
+.label {
+  color: #888;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+
+.reading {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+
+.db-value {
+  font-size: 62px;
+  font-weight: 750;
+  letter-spacing: -4px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+
+.db-unit {
+  color: #777;
+  font-size: 14px;
+}
+
+
+.level-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin-top: 12px;
+}
+
+
+.level-description {
+  color: #888;
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+
+.progress-track {
+  background: #eee;
+  height: 8px;
+  border-radius: 30px;
+  margin-top: 22px;
+  overflow: hidden;
+}
+
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #78d7a8, #f0c467, #ec7272);
+  transition: width .15s;
+}
+
+
+.scale {
+  display: flex;
+  justify-content: space-between;
+  color: #999;
+  font-size: 10px;
+  margin-top: 7px;
+}
+
+
+#waveform, #historyChart {
+  display: block;
+  width: 100%;
+}
+
+
+#waveform {
+  height: 90px;
+  margin-top: 12px;
+}
+
+
+#historyChart { height: 115px; }
+
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+
+.stat {
+  border: 1px solid #eee;
+  border-radius: 11px;
+  padding: 12px;
+}
+
+
+.stat-label {
+  color: #888;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+
+.stat-value {
+  font-size: 21px;
+  font-weight: 750;
+  margin-top: 5px;
+}
+
+
+.controls {
+  display: flex;
+  gap: 9px;
+  margin-top: 18px;
+}
+
+
+.btn {
+  padding: 11px 13px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+.btn-black {
+  color: #fff;
+  border: 0;
+  background: linear-gradient(135deg, #333, #050505);
+  box-shadow: 0 5px 14px rgba(0,0,0,.18);
+  transition: .2s;
+}
+
+
+.btn-black:hover {
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0,0,0,.25);
+}
+
+
+.btn-black:disabled { opacity: .5; }
+
+
+.btn-light-outline {
+  color: #222;
+  border: 1px solid #dedee2;
+  background: #fff;
+}
+
+
+.btn-light-outline:hover {
+  background: #f6f6f6;
+  border-color: #bbb;
+}
+
+
+.section-title {
+  font-size: 14px;
+  font-weight: 750;
+  margin: 0;
+}
+
+
+.history-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 15px;
+  color: #1f1f1f;
+  font-size: 14px;
+}
+
+
+.info-row strong { color: #222; }
+
+
+.export-section { margin-top: 28px; }
+
+
+.export-section .btn {
+  width: 100%;
+  margin-top: 9px;
+}
+
+
+.message {
+  color: #888;
+  font-size: 10px;
+  line-height: 1.5;
+  margin-top: 12px;
+  min-height: 15px;
+}
+
+
+
+
+@media(max-width: 620px) {
+  .dashboard { grid-template-columns: 1fr; }
+  .panel { padding: 17px; }
+  .db-value { font-size: 56px; }
+  
+}
+</style>
+</head>
+
+
+<body>
+<main class="meter-shell" id="report">
+  <header class="header">
+    <div>
+      <h2 class="fst-heading">Decibel Meter</h2>
+      <div class="subtitle">Measure your environment in real time</div>
+    </div>
+    <span class="status-pill" id="liveStatus">
+      ● MICROPHONE OFF
+    </span>
+  </header>
+
+
+  <section class="content">
+    <div class="dashboard">
+
+
+      <!-- LEFT COLUMN: LIVE METER -->
+      <section class="panel">
+        <div class="label">Current sound level</div>
+
+
+        <div class="reading">
+          <span class="db-value" id="currentDb">—</span>
+          <span class="db-unit">dB*</span>
+        </div>
+
+
+        <div class="level-title" id="levelTitle">
+          Ready to measure
+        </div>
+
+
+        <div class="level-description" id="levelDescription">
+          Start the meter to sample ambient sound.
+        </div>
+
+
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+
+        <div class="scale">
+          <span>Quiet · 0</span>
+          <span>50</span>
+          <span>100</span>
+          <span>120 dB</span>
+        </div>
+
+
+        <canvas id="waveform"></canvas>
+
+
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-label">Average</div>
+            <div class="stat-value">
+              <span id="averageDb">—</span>
+            </div>
+          </div>
+
+
+          <div class="stat">
+            <div class="stat-label">Peak</div>
+            <div class="stat-value">
+              <span id="peakDb">—</span>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="controls">
+          <button class="btn btn-black flex-grow-1" id="startBtn">
+            ▶ Start Meter
+          </button>
+
+
+          <button class="btn btn-light-outline" id="stopBtn" disabled>
+            Stop
+          </button>
+        </div>
+
+
+        <button class="btn btn-light-outline w-100 mt-2" id="resetBtn">
+          ↺ Reset Results
+        </button>
+
+
+        <div class="message" id="statusMessage" role="status">
+          Allow microphone access when prompted.
+        </div>
+      </section>
+
+
+      <!-- RIGHT COLUMN: HISTORY AND EXPORT -->
+      <section class="panel">
+        <div class="history-heading">
+          <h2 class="section-title">Measurement History</h2>
+          <span class="text-secondary small" id="sampleCount">
+            0 samples
+          </span>
+        </div>
+
+
+        <canvas id="historyChart"></canvas>
+
+
+        <div class="info-row">
+          <span>Session duration</span>
+          <strong id="duration">00:00</strong>
+        </div>
+
+
+        <div class="info-row">
+          <span>Last reading</span>
+          <strong id="lastReading">—</strong>
+        </div>
+
+        <div class="info-row">
+          <span>Highest level</span>
+          <strong id="highestReading">—</strong>
+        </div>
+        <div class="export-section">
+          <div class="label">Export & Share</div>
+          <button class="btn btn-black" id="downloadBtn">
+            ↓ Download PNG Report
+          </button>
+        </div>
+      </section>
+
+
+    </div>
+  </section>
+</main>
+
+
+<script>
+const $ = id => document.getElementById(id);
+
+
+let audioContext = null;
+let analyser = null;
+let stream = null;
+let animationId = null;
+let sampleTimer = null;
+
+
+let samples = [];
+let startedAt = null;
+let elapsedBefore = 0;
+let waveformData = [];
+
+
+const maxSamples = 90;
+
+
+/* SOUND LEVEL LABELS */
+function levelInfo(db) {
+  if (db < 30)
+    return ["Very quiet", "A calm room or soft whisper"];
+
+
+  if (db < 50)
+    return ["Quiet", "A quiet room or light rainfall"];
+
+
+  if (db < 70)
+    return ["Moderate", "Normal conversation or a home setting"];
+
+
+  if (db < 85)
+    return ["Loud", "Busy traffic or a noisy office"];
+
+
+  if (db < 100)
+    return ["Very loud", "Heavy traffic or loud machinery"];
+
+
+  return ["Extremely loud", "Limit exposure and protect your hearing"];
+}
+
+
+function number(value) {
+  return Number.isFinite(value) ? Math.round(value) : "—";
+}
+
+
+/* CANVAS RESIZING */
+function resizeCanvas(canvas) {
+  const rect = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+
+
+  canvas.width = Math.max(1, Math.round(rect.width * dpr));
+  canvas.height = Math.max(1, Math.round(rect.height * dpr));
+
+
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+
+  return { ctx, w: rect.width, h: rect.height };
+}
+
+
+/* LIVE WAVEFORM */
+function drawWaveform() {
+  const { ctx, w, h } = resizeCanvas($("waveform"));
+
+
+  ctx.clearRect(0, 0, w, h);
+
+
+  ctx.strokeStyle = "#eee";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, h / 2);
+  ctx.lineTo(w, h / 2);
+  ctx.stroke();
+
+
+  if (!waveformData.length) {
+    ctx.strokeStyle = "#d5d5da";
+    ctx.beginPath();
+
+
+    for (let x = 0; x < w; x += 4) {
+      const y = h / 2 + Math.sin(x * .07) * 4;
+      if (x === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+
+
+    ctx.stroke();
+    return;
+  }
+
+
+  ctx.strokeStyle = "#111";
+  ctx.lineWidth = 1.6;
+  ctx.beginPath();
+
+
+  for (let x = 0; x < w; x++) {
+    const i = Math.floor(x / w * waveformData.length);
+    const y = h / 2 + waveformData[i] * h * .42;
+
+
+    if (x === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+
+
+  ctx.stroke();
+}
+
+
+/* HISTORY GRAPH */
+function drawHistory() {
+  const { ctx, w, h } = resizeCanvas($("historyChart"));
+
+
+  ctx.clearRect(0, 0, w, h);
+
+
+  for (let i = 0; i < 4; i++) {
+    const y = 5 + i * (h - 10) / 3;
+
+
+    ctx.strokeStyle = "#eee";
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(w, y);
+    ctx.stroke();
+  }
+
+
+  if (samples.length < 2) {
+    ctx.fillStyle = "#999";
+    ctx.font = "11px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("Your readings will appear here", w / 2, h / 2);
+    return;
+  }
+
+
+  const values = samples.slice(-maxSamples);
+
+
+  const points = values.map((s, i) => ({
+    x: i / (values.length - 1) * w,
+    y: h - 5 - s.db / 120 * (h - 10)
+  }));
+
+
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, h - 5);
+
+
+  points.forEach(p => ctx.lineTo(p.x, p.y));
+
+
+  ctx.lineTo(points[points.length - 1].x, h - 5);
+  ctx.closePath();
+
+
+  ctx.fillStyle = "rgba(0,0,0,.06)";
+  ctx.fill();
+
+
+  ctx.beginPath();
+
+
+  points.forEach((p, i) => {
+    if (i === 0) ctx.moveTo(p.x, p.y);
+    else ctx.lineTo(p.x, p.y);
+  });
+
+
+  ctx.strokeStyle = "#111";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+}
+
+
+/* UPDATE MEASUREMENTS */
+function updateReading(db) {
+  const values = samples.map(s => s.db);
+
+
+  if (!values.length) return;
+
+
+  const average =
+    values.reduce((a, b) => a + b, 0) / values.length;
+
+
+  const peak = Math.max(...values);
+  const [title, description] = levelInfo(db);
+
+
+  $("currentDb").textContent = number(db);
+  $("averageDb").textContent = number(average) + " dB*";
+  $("peakDb").textContent = number(peak) + " dB*";
+
+
+  $("levelTitle").textContent = title;
+  $("levelDescription").textContent = description;
+
+
+  $("progressFill").style.width =
+    Math.min(100, Math.max(0, db / 120 * 100)) + "%";
+
+
+  $("sampleCount").textContent =
+    samples.length + " samples";
+
+
+  $("lastReading").textContent = number(db) + " dB*";
+  $("highestReading").textContent = number(peak) + " dB*";
+}
+
+
+/* SESSION DURATION */
+function updateDuration() {
+  const elapsed = elapsedBefore +
+    (startedAt ? Math.floor((Date.now() - startedAt) / 1000) : 0);
+
+
+  $("duration").textContent =
+    String(Math.floor(elapsed / 60)).padStart(2, "0") + ":" +
+    String(elapsed % 60).padStart(2, "0");
+}
+
+
+/* MEASUREMENT LOOP */
+function tick() {
+  if (!analyser) return;
+
+
+  const data = new Uint8Array(analyser.fftSize);
+  analyser.getByteTimeDomainData(data);
+
+
+  let sum = 0;
+
+
+  waveformData = Array.from(data, x => (x - 128) / 128);
+
+
+  for (const x of data) {
+    const v = (x - 128) / 128;
+    sum += v * v;
+  }
+
+
+  const rms = Math.sqrt(sum / data.length);
+
+
+  /*
+    Relative microphone estimate, NOT calibrated dB SPL.
+    Device microphone sensitivity and automatic gain control
+    can change these readings.
+  */
+  const db = Math.max(
+    0,
+    Math.min(
+      120,
+      Math.round(20 * Math.log10(Math.max(rms, 0.00001)) + 95)
+    )
+  );
+
+
+  samples.push({ time: Date.now(), db });
+
+
+  if (samples.length > maxSamples) samples.shift();
+
+
+  updateReading(db);
+  drawWaveform();
+  drawHistory();
+  updateDuration();
+
+
+  sampleTimer = setTimeout(() => {
+    if (analyser) {
+      animationId = requestAnimationFrame(tick);
+    }
+  }, 180);
+}
+
+
+/* START MICROPHONE */
+async function startMeter() {
+  if (analyser) return;
+
+
+  if (!navigator.mediaDevices?.getUserMedia) {
+    $("statusMessage").textContent =
+      "Microphone access requires a supported browser and HTTPS or localhost.";
+    return;
+  }
+
+
+  $("startBtn").disabled = true;
+  $("statusMessage").textContent = "Requesting microphone access…";
+
+
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        echoCancellation: false,
+        noiseSuppression: false,
+        autoGainControl: false
+      }
+    });
+
+
+    audioContext = new (
+      window.AudioContext || window.webkitAudioContext
+    )();
+
+
+    await audioContext.resume();
+
+
+    analyser = audioContext.createAnalyser();
+    analyser.fftSize = 2048;
+    analyser.smoothingTimeConstant = 0.35;
+
+
+    const source = audioContext.createMediaStreamSource(stream);
+    source.connect(analyser);
+
+
+    startedAt = Date.now();
+
+
+    $("liveStatus").textContent = "● LIVE MEASUREMENT";
+    $("stopBtn").disabled = false;
+
+
+    $("statusMessage").textContent =
+      "Measuring ambient sound from your microphone.";
+
+
+    tick();
+
+
+  } catch (error) {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+      stream = null;
+    }
+
+
+    if (audioContext) {
+      await audioContext.close().catch(() => {});
+      audioContext = null;
+    }
+
+
+    analyser = null;
+    $("startBtn").disabled = false;
+
+
+    $("statusMessage").textContent =
+      error.name === "NotAllowedError"
+        ? "Microphone permission denied. Allow access in browser settings."
+        : "Could not start the microphone. Check your device and try again.";
+  }
+}
+
+
+/* STOP MICROPHONE */
+function stopMeter() {
+  if (animationId !== null) {
+    cancelAnimationFrame(animationId);
+    animationId = null;
+  }
+
+
+  if (sampleTimer !== null) {
+    clearTimeout(sampleTimer);
+    sampleTimer = null;
+  }
+
+
+  if (startedAt !== null) {
+    elapsedBefore += Math.floor((Date.now() - startedAt) / 1000);
+    startedAt = null;
+  }
+
+
+  if (stream) {
+    stream.getTracks().forEach(track => track.stop());
+    stream = null;
+  }
+
+
+  if (audioContext) {
+    const ctx = audioContext;
+    audioContext = null;
+    ctx.close().catch(() => {});
+  }
+
+
+  analyser = null;
+
+
+  $("startBtn").disabled = false;
+  $("stopBtn").disabled = true;
+  $("liveStatus").textContent = "● MICROPHONE OFF";
+
+
+  updateDuration();
+}
+
+
+/* RESET ALL RESULTS */
+function resetResults() {
+  stopMeter();
+
+
+  samples = [];
+  waveformData = [];
+  elapsedBefore = 0;
+  startedAt = null;
+
+
+  $("currentDb").textContent = "—";
+  $("averageDb").textContent = "—";
+  $("peakDb").textContent = "—";
+
+
+  $("levelTitle").textContent = "Ready to measure";
+  $("levelDescription").textContent =
+    "Start the meter to sample ambient sound.";
+
+
+  $("progressFill").style.width = "0%";
+
+
+  $("sampleCount").textContent = "0 samples";
+  $("duration").textContent = "00:00";
+  $("lastReading").textContent = "—";
+  $("highestReading").textContent = "—";
+
+
+  $("statusMessage").textContent =
+    "Results reset. Start the meter for a new session.";
+
+
+  drawWaveform();
+  drawHistory();
+}
+
+
+/* REPORT CANVAS */
+function createReport() {
+  const canvas = document.createElement("canvas");
+
+
+  canvas.width = 1200;
+  canvas.height = 900;
+
+
+  const ctx = canvas.getContext("2d");
+
+
+  ctx.fillStyle = "#f3f4f6";
+  ctx.fillRect(0, 0, 1200, 900);
+
+
+  ctx.fillStyle = "#fff";
+  ctx.beginPath();
+  ctx.roundRect(35, 35, 1130, 830, 25);
+  ctx.fill();
+
+
+  ctx.fillStyle = "#111";
+  ctx.font = "bold 38px Arial";
+  ctx.fillText("Sound Decibel Meter", 75, 110);
+
+
+  ctx.fillStyle = "#777";
+  ctx.font = "18px Arial";
+  ctx.fillText(new Date().toLocaleString(), 75, 148);
+
+
+  ctx.fillStyle = "#111";
+  ctx.font = "bold 95px Arial";
+  ctx.fillText($("currentDb").textContent, 75, 270);
+
+
+  ctx.fillStyle = "#777";
+  ctx.font = "bold 22px Arial";
+  ctx.fillText("dB* CURRENT ESTIMATE", 250, 265);
+
+
+  const boxes = [
+    ["AVERAGE", $("averageDb").textContent],
+    ["PEAK", $("peakDb").textContent],
+    ["DURATION", $("duration").textContent],
+    ["SAMPLES", String(samples.length)]
+  ];
+
+
+  boxes.forEach((box, i) => {
+    const x = 75 + (i % 2) * 520;
+    const y = 320 + Math.floor(i / 2) * 105;
+
+
+    ctx.fillStyle = "#f5f5f6";
+    ctx.beginPath();
+    ctx.roundRect(x, y, 475, 78, 12);
+    ctx.fill();
+
+
+    ctx.fillStyle = "#888";
+    ctx.font = "bold 14px Arial";
+    ctx.fillText(box[0], x + 18, y + 25);
+
+
+    ctx.fillStyle = "#111";
+    ctx.font = "bold 27px Arial";
+    ctx.fillText(box[1], x + 18, y + 58);
+  });
+
+
+  const x0 = 75, y0 = 570, w = 1040, h = 175;
+
+
+  ctx.fillStyle = "#777";
+  ctx.font = "bold 15px Arial";
+  ctx.fillText("SOUND LEVEL HISTORY", x0, y0 - 18);
+
+
+  for (let i = 0; i < 4; i++) {
+    const y = y0 + i * h / 3;
+
+
+    ctx.strokeStyle = "#e8e8eb";
+    ctx.beginPath();
+    ctx.moveTo(x0, y);
+    ctx.lineTo(x0 + w, y);
+    ctx.stroke();
+  }
+
+
+  if (samples.length > 1) {
+    ctx.beginPath();
+
+
+    samples.forEach((s, i) => {
+      const x = x0 + i / (samples.length - 1) * w;
+      const y = y0 + h - s.db / 120 * h;
+
+
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+
+
+    ctx.strokeStyle = "#111";
+    ctx.lineWidth = 3;
+    ctx.stroke();
+  } else {
+    ctx.fillStyle = "#999";
+    ctx.font = "18px Arial";
+    ctx.fillText("No measurement history available.", x0, y0 + 85);
+  }
+
+
+  ctx.fillStyle = "#888";
+  ctx.font = "14px Arial";
+  ctx.fillText(
+    "*Relative microphone estimate, not calibrated dB SPL.",
+    75, 810
+  );
+
+
+  return canvas;
+}
+
+
+/* DOWNLOAD PNG REPORT */
+$("downloadBtn").addEventListener("click", () => {
+  createReport().toBlob(blob => {
+    if (!blob) {
+      $("statusMessage").textContent = "Could not generate the PNG report.";
+      return;
+    }
+
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+
+    link.href = url;
+    link.download = "sound-decibel-report.png";
+    link.click();
+
+
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+
+    $("statusMessage").textContent = "PNG report downloaded.";
+  }, "image/png");
+});
+
+
+
+
+/* BUTTON EVENTS */
+$("startBtn").addEventListener("click", startMeter);
+$("stopBtn").addEventListener("click", stopMeter);
+$("resetBtn").addEventListener("click", resetResults);
+
+
+/* RESPONSIVE CHARTS */
+window.addEventListener("resize", () => {
+  drawWaveform();
+  drawHistory();
+});
+
+
+/* INITIAL STATE */
+drawWaveform();
+drawHistory();
+</script>
+</body>
+</html>
