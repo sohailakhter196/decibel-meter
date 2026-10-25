@@ -7,11 +7,17 @@ Measure ambient sound levels with the **Sound Decibel Meter**, a free online too
 **Try the Sound Decibel Meter online:**  
 https://microphone-test.com/sound-decibel-meter/
 
-## 📸 Screenshot
+
 
 ## 📸 Sound Decibel Meter Preview
 
-decibelmeter.png
+<p align="center">
+  <a href="https://microphone-test.com/sound-decibel-meter/">
+    <img src="decibelmeter.png"
+         alt="Sound Decibel Meter Online Tool"
+         width="800">
+  </a>
+</p>
 
 *Real-time sound monitoring with a sound level meter, noise reference guide, and measurement controls.*
 
